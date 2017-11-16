@@ -19,3 +19,7 @@ Let's start with the beginning and see how we can inspect a package to discover 
 To make our life a little easier, we will use Guava's [classpath](https://github.com/google/guava/wiki/ReflectionExplained#classpath) functionality to find out which classes have been defined in our package.
 A warning from Google: **So don't use it for mission critical production task**, which is fine as this really meant as a toy project.
 
+## 2. Annotations
+The following annotations will be created:
+* @Bean for creating the beans
+* @Inject for injecting dependencies
