@@ -19,6 +19,7 @@ public class BeanRegistry {
     public void register( Object beanObject){
         register(beanObject.getClass(), beanObject);
     }
+
     public void register(Class beanClass, Object beanObject){
         // one can register an object only once
         assert !registry.containsKey(beanClass);
@@ -30,5 +31,8 @@ public class BeanRegistry {
         return registry.get(beanClass);
     }
 
+    public boolean isInstantiated(Class c){
+        return registry.containsKey(c);
+    }
     // Note that there is no "remove" method. Beans are instantiated once at start-up and then should not be removed
 }

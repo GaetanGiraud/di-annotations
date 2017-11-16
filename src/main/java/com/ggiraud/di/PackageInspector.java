@@ -21,14 +21,29 @@ import java.util.stream.Collectors;
 public class PackageInspector {
     Logger logger = LoggerFactory.getLogger(PackageInspector.class);
 
-    public static Set<String> getClassesForPackage(Class baseClass) throws IOException {
+    public static Set<Class> getBeans(Class baseClass) throws IOException, ClassNotFoundException {
+        Set<Class> allClasses = getClassesForPackage(baseClass);
+
+        return allClasses.stream().filter(PackageInspector::isBean).collect(Collectors.toSet());
+
+    }
+
+    public static Set<Class> getClassesForPackage(Class baseClass) throws IOException, ClassNotFoundException {
         ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader()); // scans the class path used by classloader
 
         String packageName = baseClass.getPackage().getName();
 
         Set<ClassPath.ClassInfo> classes = classpath.getTopLevelClassesRecursive(packageName);
 
-        return classes.stream().map(ClassPath.ClassInfo::getName).collect(Collectors.toSet());
+        return getClasses(classes.stream().map(ClassPath.ClassInfo::getName).collect(Collectors.toSet()));
+    }
+
+    public static Set<Class> getClasses(Collection<String> classNames) throws ClassNotFoundException {
+        Set<Class> classes = new HashSet<>();
+
+        for(String className : classNames) classes.add(getClass(className));
+
+        return classes;
     }
 
     public static Class getClass(String className) throws ClassNotFoundException {

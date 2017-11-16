@@ -3,6 +3,7 @@ package com.ggiraud.di;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,22 @@ public class ClassInstantiator {
         this.registry = registry;
     }
 
+    public void instantiateAll(Class baseClass){
+        try {
+            logger.info("Starting loading beans for package {}", baseClass.getPackage());
+            Set<Class> classes = PackageInspector.getBeans(this.getClass());
+
+            for(Class c : classes){
+                if(!registry.isInstantiated(c)) instantiate(c);
+            }
+
+        } catch (IOException e) {
+            logger.error("Could not instantiate beans for package {}.", this.getClass().getPackage());
+        } catch (ClassNotFoundException e) {
+            logger.error("Could not instantiate beans for package {}.", this.getClass().getPackage());
+        }
+    }
+
     public Object instantiate(Class myClass){
         try {
             return instantiateClass(myClass);
@@ -41,11 +58,16 @@ public class ClassInstantiator {
         for(Class c : injectedClasses){
             Object bean = registry.get(c);
 
-            if(bean == null) throw new NullPointerException();
-
+            if(bean == null) {
+                bean = instantiate(c);
+            }
             argumentsList.add(bean);
         }
 
-        return myClass.getConstructors()[0].newInstance(argumentsList.toArray());
+        Object instantiatedBean = myClass.getConstructors()[0].newInstance(argumentsList.toArray());
+
+        registry.register(instantiatedBean);
+
+        return instantiatedBean;
     }
 }
