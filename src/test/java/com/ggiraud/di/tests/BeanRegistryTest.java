@@ -18,13 +18,11 @@ import static org.junit.Assert.assertTrue;
 public class BeanRegistryTest {
     @Test
     public void RegisterBeanTest(){
-        BeanRegistry beanRegistry = new BeanRegistry();
-
         BeanClass bean = new BeanClass(new InjectedBean(), new InjectedBean2());
 
-        beanRegistry.register(BeanClass.class, bean);
+        BeanRegistry.register(BeanClass.class, bean);
 
-        assertEquals("Error registering bean in registry" , bean, beanRegistry.get(BeanClass.class));
+        assertEquals("Error registering bean in registry" , bean, BeanRegistry.get(BeanClass.class));
 
     }
 }

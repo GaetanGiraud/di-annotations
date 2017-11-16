@@ -10,29 +10,29 @@ import java.util.Map;
  * @author ggiraud
  */
 public class BeanRegistry {
-    private final Map<Class, Object> registry;
+    private static final Map<Class, Object> registry = new HashMap<>();
 
-    public BeanRegistry() {
-        registry = new HashMap<>();
-    }
-
-    public void register( Object beanObject){
+    public static void register( Object beanObject){
         register(beanObject.getClass(), beanObject);
     }
 
-    public void register(Class beanClass, Object beanObject){
+    public static void register(Class beanClass, Object beanObject){
         // one can register an object only once
         assert !registry.containsKey(beanClass);
 
         registry.put(beanClass, beanObject);
     }
 
-    public Object get(Class beanClass){
+    public static Object get(Class beanClass){
         return registry.get(beanClass);
     }
 
-    public boolean isInstantiated(Class c){
+    public static boolean isInstantiated(Class c){
         return registry.containsKey(c);
+    }
+
+    public static void reset() {
+        registry.clear();
     }
     // Note that there is no "remove" method. Beans are instantiated once at start-up and then should not be removed
 }

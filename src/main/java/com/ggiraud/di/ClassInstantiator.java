@@ -19,19 +19,13 @@ import java.util.concurrent.ExecutorService;
 public class ClassInstantiator {
     private final Logger logger = LoggerFactory.getLogger(PackageInspector.class);
 
-    private final BeanRegistry registry;
-
-    public ClassInstantiator(BeanRegistry registry) {
-        this.registry = registry;
-    }
-
     public void instantiateAll(Class baseClass){
         try {
             logger.info("Starting loading beans for package {}", baseClass.getPackage());
-            Set<Class> classes = PackageInspector.getBeans(this.getClass());
+            Set<Class> classes = PackageInspector.getBeans(baseClass);
 
             for(Class c : classes){
-                if(!registry.isInstantiated(c)) instantiate(c);
+                if(!BeanRegistry.isInstantiated(c)) instantiate(c);
             }
 
         } catch (IOException e) {
@@ -56,7 +50,7 @@ public class ClassInstantiator {
         List<Object> argumentsList = new ArrayList<>();
 
         for(Class c : injectedClasses){
-            Object bean = registry.get(c);
+            Object bean = BeanRegistry.get(c);
 
             if(bean == null) {
                 bean = instantiate(c);
@@ -66,7 +60,7 @@ public class ClassInstantiator {
 
         Object instantiatedBean = myClass.getConstructors()[0].newInstance(argumentsList.toArray());
 
-        registry.register(instantiatedBean);
+        BeanRegistry.register(instantiatedBean);
 
         return instantiatedBean;
     }

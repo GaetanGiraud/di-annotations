@@ -18,12 +18,11 @@ import static org.junit.Assert.*;
  */
 public class ClassInstantiationTest {
     private ClassInstantiator classInstantiator;
-    private BeanRegistry registry;
 
     @Before
     public void init(){
-        registry = new BeanRegistry();
-        classInstantiator = new ClassInstantiator(registry);
+        BeanRegistry.reset();
+        classInstantiator = new ClassInstantiator();
 
     }
 
@@ -39,8 +38,8 @@ public class ClassInstantiationTest {
         InjectedBean iBean = new InjectedBean();
         InjectedBean2 iBean2 = new InjectedBean2();
 
-        registry.register(iBean);
-        registry.register(iBean2);
+        BeanRegistry.register(iBean);
+        BeanRegistry.register(iBean2);
 
         Object o = classInstantiator.instantiate(BeanClass.class);
 
@@ -56,8 +55,8 @@ public class ClassInstantiationTest {
 
         assertEquals("Bean with injected beans should be instantiated", BeanClass.class, o.getClass());
 
-        assertNotNull("Injected bean should be instantiated automatically", registry.get(InjectedBean.class));
-        assertNotNull("Injected bean 2  should be instantiated automatically", registry.get(InjectedBean2.class));
+        assertNotNull("Injected bean should be instantiated automatically", BeanRegistry.get(InjectedBean.class));
+        assertNotNull("Injected bean 2  should be instantiated automatically", BeanRegistry.get(InjectedBean2.class));
 
 
     }
@@ -66,11 +65,11 @@ public class ClassInstantiationTest {
     public void TestInstantiateAll(){
         classInstantiator.instantiateAll(this.getClass());
 
-        assertTrue("Bean with injected beans should be instantiated", registry.isInstantiated(BeanClass.class));
+        assertTrue("Bean with injected beans should be instantiated", BeanRegistry.isInstantiated(BeanClass.class));
 
-        assertTrue("Injected bean should be instantiated automatically", registry.isInstantiated(InjectedBean.class));
-        assertTrue("Injected bean 2  should be instantiated automatically", registry.isInstantiated(InjectedBean2.class));
+        assertTrue("Injected bean should be instantiated automatically", BeanRegistry.isInstantiated(InjectedBean.class));
+        assertTrue("Injected bean 2  should be instantiated automatically", BeanRegistry.isInstantiated(InjectedBean2.class));
 
-        assertFalse("Regular bean should not be instantiated automatically", registry.isInstantiated(RegularClass.class));
+        assertFalse("Regular bean should not be instantiated automatically", BeanRegistry.isInstantiated(RegularClass.class));
     }
 }
