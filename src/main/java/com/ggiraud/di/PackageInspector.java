@@ -9,8 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,16 +31,16 @@ public class PackageInspector {
         return classes.stream().map(ClassPath.ClassInfo::getName).collect(Collectors.toSet());
     }
 
-    public static Class getClass(String className){
-        return getClass(className);
+    public static Class getClass(String className) throws ClassNotFoundException {
+        return Class.forName(className);
     }
 
     public static boolean isBean(Class myClass) {
         return myClass.isAnnotationPresent(Bean.class);
     }
 
-    public static Set<Class> getInjectedDependencies(Class myClass){
-        if(!isBean(myClass)) return null; // only beans allowed
+    public static List<Class> getInjectedDependencies(Class myClass){
+        if(!isBean(myClass)) return new ArrayList<>(); // only beans allowed
 
         Constructor[] constructors = myClass.getConstructors();
 
@@ -50,9 +49,9 @@ public class PackageInspector {
         Constructor constructor = constructors[0];
 
         if(constructor.isAnnotationPresent(Inject.class)) {
-            return Arrays.stream(constructor.getParameters()).map(Parameter::getType).collect(Collectors.toSet());
+            return Arrays.stream(constructor.getParameters()).map(Parameter::getType).collect(Collectors.toList());
         }
-        return null;
+        return new ArrayList<>();
 
 
     }

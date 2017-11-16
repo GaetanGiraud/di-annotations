@@ -7,6 +7,7 @@ import com.ggiraud.di.tests.resources.RegularClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -36,7 +37,11 @@ public class PackageInspectionTest {
 
     @Test
     public void canGetClassName(){
+        try {
             assertEquals("Could not find beanClass using the PackageInspector",loadTestClass(BeanClass.beanClassName), PackageInspector.getClass(BeanClass.beanClassName));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -47,7 +52,7 @@ public class PackageInspectionTest {
 
     @Test
     public void canFindInjectedBeans(){
-        Set<Class> injectedClasses =  PackageInspector.getInjectedDependencies(loadTestClass(BeanClass.beanClassName));
+        List<Class> injectedClasses =  PackageInspector.getInjectedDependencies(loadTestClass(BeanClass.beanClassName));
 
         assertTrue("Cannot identify injected bean class in bean constructor class", injectedClasses.contains(InjectedBean.class));
 

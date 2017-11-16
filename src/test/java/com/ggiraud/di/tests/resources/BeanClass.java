@@ -14,10 +14,20 @@ public class BeanClass {
     public static final String beanClassName = "com.ggiraud.di.tests.resources.BeanClass";
 
     private final InjectedBean injectedBean;
+    private final InjectedBean2 injectedBean2;
 
     @Inject
-    public BeanClass(InjectedBean injectedBean) {
+    public BeanClass(InjectedBean injectedBean, InjectedBean2 injectedBean2) {
         this.injectedBean = injectedBean;
+        this.injectedBean2 = injectedBean2;
 
+    }
+
+    public InjectedBean getInjectedBean() {
+        return injectedBean;
+    }
+
+    public InjectedBean2 getInjectedBean2() {
+        return injectedBean2;
     }
 }

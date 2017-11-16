@@ -16,6 +16,9 @@ public class BeanRegistry {
         registry = new HashMap<>();
     }
 
+    public void register( Object beanObject){
+        register(beanObject.getClass(), beanObject);
+    }
     public void register(Class beanClass, Object beanObject){
         // one can register an object only once
         assert !registry.containsKey(beanClass);
