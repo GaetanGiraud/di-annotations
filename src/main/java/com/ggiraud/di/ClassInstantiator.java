@@ -19,6 +19,10 @@ import java.util.concurrent.ExecutorService;
 public class ClassInstantiator {
     private final Logger logger = LoggerFactory.getLogger(PackageInspector.class);
 
+    /**
+     * Instantiate all beans belonging to the baseClass package and its sub-package
+     * @param baseClass
+     */
     public void instantiateAll(Class baseClass){
         try {
             logger.info("Starting loading beans for package {}", baseClass.getPackage());
@@ -35,6 +39,11 @@ public class ClassInstantiator {
         }
     }
 
+    /**
+     * Instantiate one object of a class and register it in the bean registry
+     * @param myClass
+     * @return
+     */
     public Object instantiate(Class myClass){
         try {
             return instantiateClass(myClass);

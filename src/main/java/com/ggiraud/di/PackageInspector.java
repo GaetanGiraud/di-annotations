@@ -21,6 +21,13 @@ import java.util.stream.Collectors;
 public class PackageInspector {
     Logger logger = LoggerFactory.getLogger(PackageInspector.class);
 
+    /**
+     * Get the set of classes annotated with @Bean in the (sub)packages of the base class
+     * @param baseClass
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Set<Class> getBeans(Class baseClass) throws IOException, ClassNotFoundException {
         Set<Class> allClasses = getClassesForPackage(baseClass);
 
@@ -28,6 +35,13 @@ public class PackageInspector {
 
     }
 
+    /**
+     * Get the total list of classes in the (sub)packages of the base class
+     * @param baseClass
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Set<Class> getClassesForPackage(Class baseClass) throws IOException, ClassNotFoundException {
         ClassPath classpath = ClassPath.from(Thread.currentThread().getContextClassLoader()); // scans the class path used by classloader
 
@@ -38,6 +52,12 @@ public class PackageInspector {
         return getClasses(classes.stream().map(ClassPath.ClassInfo::getName).collect(Collectors.toSet()));
     }
 
+    /**
+     * Utility that converts a collection of Class string names into Class objects
+     * @param classNames
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static Set<Class> getClasses(Collection<String> classNames) throws ClassNotFoundException {
         Set<Class> classes = new HashSet<>();
 
@@ -46,14 +66,31 @@ public class PackageInspector {
         return classes;
     }
 
+    /**
+     * Utility that converts a Class string names into its corresponding Class object
+     * @param className
+     * @return
+     * @throws ClassNotFoundException
+     */
     public static Class getClass(String className) throws ClassNotFoundException {
         return Class.forName(className);
     }
 
+    /**
+     * Check if the given class has the bean annotation
+     * @param myClass
+     * @return
+     */
     public static boolean isBean(Class myClass) {
         return myClass.isAnnotationPresent(Bean.class);
     }
 
+    /**
+     * If the constructor is annotated with @Inject, return the constructor parameters.
+     * Otherwise empty list.
+     * @param myClass
+     * @return
+     */
     public static List<Class> getInjectedDependencies(Class myClass){
         if(!isBean(myClass)) return new ArrayList<>(); // only beans allowed
 
@@ -67,8 +104,6 @@ public class PackageInspector {
             return Arrays.stream(constructor.getParameters()).map(Parameter::getType).collect(Collectors.toList());
         }
         return new ArrayList<>();
-
-
     }
 
 }
