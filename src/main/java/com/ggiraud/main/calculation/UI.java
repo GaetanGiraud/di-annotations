@@ -19,7 +19,7 @@ public class UI {
         this.engine = engine;
     }
 
-    public double calculate(double x, double y){
-        return engine.calculate(x, y);
+    public void calculate(double x, double y){
+        System.out.println("2 by 3 is " + engine.calculate(x, y));
     }
 }

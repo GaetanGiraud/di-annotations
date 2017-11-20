@@ -12,20 +12,12 @@ import com.ggiraud.main.calculation.UI;
  */
 public class Application {
 
-    public void start(){
+    public static void main(String[] args){
         ClassInstantiator instantiator = new ClassInstantiator();
-        instantiator.instantiateAll(this.getClass());
+        instantiator.instantiateAll(Application.class);
 
         UI ui  = (UI) BeanRegistry.get(UI.class);
 
-        System.out.println(ui.calculate(2,3));
-    }
-
-
-    public static void main(String[] args){
-      Application application = new Application();
-
-      application.start();
-
+        ui.calculate(2,3);
     }
 }
